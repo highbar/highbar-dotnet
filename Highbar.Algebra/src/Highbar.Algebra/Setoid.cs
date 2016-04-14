@@ -2,14 +2,13 @@ namespace Highbar.Algebra
 {
   public static class Setoid
   {
-    public static Setoid<X,object,X> Reflexive<X>(X value) =>
-      new Setoid<X,object,X>(Laws.IsReflexive(value), value, value, value);
+    public static SingleResult<X> Reflexive<X>(X value) => new SingleResult<X>(Laws.IsReflexive(value), value);
 
-    public static Setoid<L,object,R> Symmetrical<L,R>(L left, R right) =>
-      new Setoid<L,object,R>(Laws.IsSymmetrical(left, right), left, null, right);
+    public static DoubleResult<L,R> Symmetrical<L,R>(L left, R right) =>
+      new DoubleResult<L,R>(Laws.IsSymmetrical(left, right), left, right);
 
-    public static Setoid<L,M,R> Transitive<L,M,R>(L left, M middle, R right) =>
-      new Setoid<L,M,R>(Laws.IsTransitive(left, middle, right), left, middle, right);
+    public static TripleResult<L,M,R> Transitive<L,M,R>(L left, M middle, R right) =>
+      new TripleResult<L,M,R>(Laws.IsTransitive(left, middle, right), left, middle, right);
 
     private static class Laws
     {
@@ -20,20 +19,6 @@ namespace Highbar.Algebra
 
       internal static bool IsTransitive(object left, object middle, object right) =>
         (left.Equals(middle) && middle.Equals(right)) == left.Equals(right);
-    }
-  }
-
-  public class Setoid<L,M,R> : Algebra
-  {
-    public L Left { get; private set; }
-    public M Middle { get; private set; }
-    public R Right { get; private set; }
-
-    internal Setoid(bool valid, L left, M middle, R right) : base(valid)
-    {
-      Left = left;
-      Middle = middle;
-      Right = right;
     }
   }
 }

@@ -1,9 +1,9 @@
 namespace Highbar.Algebra
 {
-  public abstract class Algebra
+  public abstract class AlgebraResult
   {
-    protected Algebra() {}
-    protected Algebra(bool valid)
+    protected AlgebraResult() {}
+    protected AlgebraResult(bool valid)
     {
       Valid = valid;
     }
@@ -15,7 +15,7 @@ namespace Highbar.Algebra
       return Valid ? value : default(T);
     }
 
-    public static implicit operator bool(Algebra value)
+    public static implicit operator bool(AlgebraResult value)
     {
       return value.Valid;
     }
