@@ -4,25 +4,31 @@ namespace Highbar.Algebra.Tests
 {
   public class SetoidTests
   {
-    [Theory]
-    [InlineData(1)]
-    [InlineData("test")]
-    [InlineData(double.MaxValue)]
-    public void Reflexive(object value)
+    public class Reflexive
     {
-      Assert.True(Setoid.Reflexive(value));
+      [Theory]
+      [InlineData(1)]
+      [InlineData("test")]
+      [InlineData(double.MaxValue)]
+      public void TrueForPrimitives(object value)
+      {
+        Assert.True(Setoid.Reflexive(value));
+      }
     }
 
-    [Theory]
-    [InlineData(1, 1)]
-    [InlineData(1, 2)]
-    [InlineData("test", "test")]
-    [InlineData("test1", "test2")]
-    [InlineData(double.MaxValue, double.MaxValue)]
-    [InlineData(double.MaxValue, double.MinValue)]
-    public void Symmetrical(object left, object right)
+    public class Symmetrical
     {
-      Assert.True(Setoid.Symmetrical(left, right));
+      [Theory]
+      [InlineData(1, 1)]
+      [InlineData(1, 2)]
+      [InlineData("test", "test")]
+      [InlineData("test1", "test2")]
+      [InlineData(double.MaxValue, double.MaxValue)]
+      [InlineData(double.MaxValue, double.MinValue)]
+      public void TrueForPrimitives(object left, object right)
+      {
+        Assert.True(Setoid.Symmetrical(left, right));
+      }
     }
 
     public class Transitive
