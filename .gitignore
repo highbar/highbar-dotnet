@@ -1,0 +1,3 @@
+# Visual Studio Project files are not needed for dnu builds
+*.xproj
+*.sln
