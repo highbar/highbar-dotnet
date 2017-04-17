@@ -3,20 +3,9 @@ using System.Collections.Generic;
 
 namespace Highbar.Types
 {
-  /// <summary>
-  /// Wraps an arbitrary value in either a <c>Just</c> or a <c>Nothing</c>.
-  /// <param name="V">Arbitrary value.</param>
-  /// </summary>
-  public class Maybe<V>
+  public abstract class Maybe<V>
   {
-    private readonly V _value;
-    private readonly bool _isNothing;
-
-    private Maybe(V val, bool isNothing)
-    {
-      _value = val;
-      _isNothing = isNothing;
-    }
+    protected V _value;
 
     /// <summary>
     /// Returns <c>Nothing</c> if evaluating <c>supplier</c> throws an Exception.
@@ -101,7 +90,7 @@ namespace Highbar.Types
     {
       Objects.RequireNonNull(value, "value must not be null");
 
-      return new Maybe<R>(value, false);
+      return new Just<R>(value);
     }
 
     /// <summary>
@@ -134,7 +123,7 @@ namespace Highbar.Types
     /// </summary>
     public static Maybe<R> Nothing<R>()
     {
-      return new Maybe<R>(default(R), true);
+      return new Nothing<R>();
     }
 
     /// <summary>
@@ -158,82 +147,37 @@ namespace Highbar.Types
     /// <summary>
     /// Alternative <c>alt</c>.  Replaces a <c>Nothing</c> with a <c>Maybe</c> of a value.
     /// </summary>
-    public Maybe<V> Alt(Maybe<V> other)
-    {
-      Objects.RequireNonNull(other, "other must not be null");
-
-      return this.IsJust()
-        ? this
-        : other;
-    }
+    public abstract Maybe<V> Alt(Maybe<V> other);
 
     /// <summary>
-    /// Apply <c>ap</c>.  Applies the current <c>value</c> to the value of the <c>other</c>.
+    /// Alternative <c>alt</c>.  Replaces a <c>Nothing</c> with a <c>Maybe</c> produced by a supplier.
     /// </summary>
-    public Maybe<R> Ap<R>(Maybe<Func<V, R>> other)
-    {
-      Objects.RequireNonNull(other, "other must not be null");
+    public abstract Maybe<V> Alt(Func<Maybe<V>> other);
 
-      if(other.IsJust())
-      {
-        Maybe<Maybe<R>> maybe = other.Map<Maybe<R>>(Map);
-
-        return maybe.IsJust()
-          ? FromJust(maybe)
-          : Nothing<R>();
-      }
-      else
-      {
-        return Nothing<R>();
-      }
-    }
+    /// <summary>
+    /// Apply <c>ap</c>.  Applies the current value to the value of the other.
+    /// </summary>
+    public abstract Maybe<R> Ap<R>(Maybe<Func<V, R>> other);
 
     /// <summary>
     /// See Maybe#Chain.
     /// </summary>
     public Maybe<R> Bind<R>(Func<V, Maybe<R>> mapper)
     {
-      return this.Chain(mapper);
+      return Chain<R>(mapper);
     }
 
     /// <summary>
     /// Chain <c>chain</c> (aka bind or flatMap).  Takes a <c>Func</c> that accepts the current <c>value</c> and
     /// returns a <c>Maybe</c> of the return value.
     /// </summary>
-    public Maybe<R> Chain<R>(Func<V, Maybe<R>> mapper)
-    {
-      Objects.RequireNonNull(mapper, "mapper must not be null");
-
-      if(IsJust())
-      {
-        Maybe<Maybe<R>> maybe = Map<Maybe<R>>(mapper);
-
-        return maybe.IsJust()
-          ? FromJust(maybe)
-          : Nothing<R>();
-      }
-      else
-      {
-        return Nothing<R>();
-      }
-    }
+    public abstract Maybe<R> Chain<R>(Func<V, Maybe<R>> mapper);
 
     /// <summary>
     /// Wraps execution of the <c>mapper</c> in a try...catch where successful mapping is returned as a <c>Just</c>
     /// or the caught exception is ignored and a <c>Nothing</c> is returned.
     /// </summary>
-    public Maybe<R> CheckedMap<R>(Func<V, R> mapper)
-    {
-      try
-      {
-        return IsJust()
-          ? OfNullable(mapper(_value))
-          : Nothing<R>();
-      } catch
-      {
-        return Nothing<R>();
-      }
-    }
+    public abstract Maybe<R> CheckedMap<R>(Func<V, R> mapper);
 
     /// <summary>
     /// See Maybe#Alt.
@@ -246,167 +190,85 @@ namespace Highbar.Types
     /// <summary>
     /// Extend <c>extend</c>.  Takes a <c>Func</c> that takes a <c>Maybe</c> and returns an unboxed value.
     /// </summary>
-    public Maybe<R> Extend<R>(Func<Maybe<V>, R> mapper)
-    {
-      Objects.RequireNonNull(mapper, "mapper must not be null");
-
-      return IsJust()
-        ? Duplicate().Map(mapper)
-        : Nothing<R>();
-    }
+    public abstract Maybe<R> Extend<R>(Func<Maybe<V>, R> mapper);
 
     /// <summary>
     /// Applies the <c>predicate</c> to the current <c>value</c>.
     /// </summary>
-    public Maybe<V> Filter(Predicate<V> predicate)
-    {
-      Objects.RequireNonNull(predicate, "predicate must not be null");
-
-      return IsJust() && predicate(_value)
-        ? this
-        : Nothing<V>();
-    }
+    public abstract Maybe<V> Filter(Predicate<V> predicate);
 
     /// <summary>
     /// See Maybe#Chain.
     /// </summary>
     public Maybe<R> FlatMap<R>(Func<V, Maybe<R>> mapper)
     {
-      return Chain(mapper);
+      return Chain<R>(mapper);
     }
 
     /// <summary>
     /// Foldable <c>foldLeft</c>.  Left-associative fold into a summary value.
     /// </summary>
-    public R FoldLeft<R>(Func<R, V, R> morphism, R initialValue)
-    {
-      Objects.RequireNonNull(morphism, "morphism must not be null");
-
-      return morphism(initialValue, _value);
-    }
+    public abstract R FoldLeft<R>(Func<R, V, R> morphism, R initialValue);
 
     /// <summary>
     /// Foldable <c>foldRight</c>.  Right-associative fold into a summary value.
     /// </summary>
-    public R FoldRight<R>(Func<V, R, R> morphism, R initialValue)
-    {
-      Objects.RequireNonNull(morphism, "morphism must not be null");
-
-      return morphism(_value, initialValue);
-    }
+    public abstract R FoldRight<R>(Func<V, R, R> morphism, R initialValue);
 
     /// <summary>
     /// Returns the value if the current instance is a <c>Just</c>, otherwise the otherValue.
     /// </summary>
-    public V GetOrElse(V otherValue)
-    {
-      return IsJust()
-        ? _value
-        : otherValue;
-    }
+    public abstract V GetOrElse(V otherValue);
 
     /// <summary>
     /// Returns the value if the current instance is a <c>Just</c>, otherwise runs the <c>supplier</c> and returns the
     /// result.
     /// </summary>
-    public V GetOrElseGet(Func<V> supplier)
-    {
-      Objects.RequireNonNull(supplier, "supplier must not be null");
-
-      return IsJust()
-        ? _value
-        : supplier();
-    }
+    public abstract V GetOrElseGet(Func<V> supplier);
 
     /// <summary>
     /// Returns the value if the current instance is a <c>Just</c>, otherwise runs the <c>supplier</c> and throws the
     /// resuling exception.
     /// </summary>
-    public V GetOrElseThrow<E>(Func<E> supplier) where E : Exception
-    {
-      Objects.RequireNonNull(supplier, "supplier must not be null");
-
-      if(IsJust())
-      {
-        return _value;
-      }
-      else
-      {
-        throw supplier();
-      }
-    }
+    public abstract V GetOrElseThrow(Func<Exception> supplier);
 
     /// <summary>
     /// Executes the <c>consumer</c> if the current instance is a <c>Just</c>.
     /// </summary>
-    public Maybe<V> IfJust(Action<V> consumer)
-    {
-      Objects.RequireNonNull(consumer, "consumer must not be null");
-
-      if(IsJust())
-      {
-        consumer(_value);
-      }
-
-      return this;
-    }
+    public abstract Maybe<V> IfJust(Action<V> consumer);
 
     /// <summary>
     /// Executes the <c>runnable</c> if the current instance is a <c>Nothing</c>.
     /// </summary>
-    public Maybe<V> IfNothing(Action runnable)
-    {
-      Objects.RequireNonNull(runnable, "runnable must not be null");
-
-      if(IsNothing())
-      {
-        runnable();
-      }
-
-      return this;
-    }
+    public abstract Maybe<V> IfNothing(Action runnable);
 
     /// <summary>
     /// Determines whether or not the current instance is a <c>Just</c>.
     /// </summary>
-    public bool IsJust()
-    {
-      return !_isNothing;
-    }
+    public abstract bool IsJust();
 
     /// <summary>
     /// Determines whether or not the current instance is a <c>Nothing</c>.
     /// </summary>
     public bool IsNothing()
     {
-      return _isNothing;
+      return !IsJust();
     }
 
     /// <summary>
     /// Functor <c>map</c>.  Takes a <c>Func</c> that maps the value.
     /// </summary>
-    public Maybe<R> Map<R>(Func<V, R> mapper)
-    {
-      Objects.RequireNonNull(mapper, "mapper must not be null");
-
-      R val = mapper(_value);
-
-      return IsJust()
-        ? OfNullable(val)
-        : Nothing<R>();
-    }
+    public abstract Maybe<R> Map<R>(Func<V, R> mapper);
 
     /// <summary>
     /// Recover from a <c>Nothing</c> into a possible <c>Just</c>.
     /// </summary>
-    public Maybe<V> Recover(V value)
-    {
-      Objects.RequireNonNull(value, "value must not be null");
+    public abstract Maybe<V> Recover(V value);
 
-      return IsJust()
-        ? this
-        : Just(value);
-    }
+    /// <summary>
+    /// Recover from a <c>Nothing</c> into a possible <c>Just</c>.
+    /// </summary>
+    public abstract Maybe<V> Recover(Func<V> supplier);
 
     /// <summary>
     /// Taps into the underlying value of the <c>Maybe</c>.
@@ -420,50 +282,9 @@ namespace Highbar.Types
         .IfJust(consumer);
     }
 
-    /// <summary>
+    // <summary>
     /// Converts the instance to a <c>List</c>.
     /// </summary>
-    public IList<V> ToList()
-    {
-      return IsJust()
-        ? new List<V> { _value }
-        : new List<V>();
-    }
-
-    public override int GetHashCode()
-    {
-      return IsNothing()
-        ? 1
-        : _value.GetHashCode();
-    }
-
-    public override bool Equals(object obj)
-    {
-      Maybe<V> maybe = obj as Maybe<V>;
-
-      if(maybe == null)
-      {
-        return false;
-      }
-
-      if(maybe.IsNothing() && this.IsNothing())
-      {
-        return true;
-      }
-
-      return maybe._value.Equals(this._value);
-    }
-
-    public override string ToString()
-    {
-      return _isNothing
-        ? "Nothing"
-        : "Maybe{" + _value + "}";
-    }
-
-    private Maybe<Maybe<V>> Duplicate()
-    {
-      return Just(this);
-    }
+    public abstract IList<V> ToList();
   }
 }
