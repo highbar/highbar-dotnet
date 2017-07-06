@@ -801,7 +801,7 @@ namespace Highbar.Types.Tests
         [Fact]
         public void shouldReturnMaybeValueForJust()
         {
-          string expectedResult = "Maybe{" + _testValue + "}";
+          string expectedResult = "Just{" + _testValue + "}";
           string actualResult = _testMaybe.ToString();
 
           Assert.Equal(expectedResult, actualResult);
