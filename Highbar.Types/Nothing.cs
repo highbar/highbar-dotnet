@@ -109,6 +109,11 @@ namespace Highbar.Types
       return Just(supplier());
     }
 
+    public override Either<Exception, V> ToEither()
+    {
+      return Either<Exception, V>.Left<Exception, V>(new NullReferenceException("value is null"));
+    }
+
     public override IList<V> ToList()
     {
       return new List<V>();
@@ -119,9 +124,9 @@ namespace Highbar.Types
       return 1;
     }
 
-    public override bool Equals(object o)
+    public override bool Equals(object obj)
     {
-      if(o is Nothing<V>)
+      if(obj is Nothing<V>)
       {
         return true;
       }

@@ -43,7 +43,7 @@ namespace Highbar.Types
     /// <summary>
     /// Creates a <c>Maybe</c> from an arbitrary nullable value type.
     /// </summary>
-    public static Maybe<R> From<R>(Nullable<R> value) where R : struct
+    public static Maybe<R> From<R>(R? value) where R : struct
     {
       return (value.HasValue)
         ? Just(value.Value)
@@ -282,7 +282,9 @@ namespace Highbar.Types
         .IfJust(consumer);
     }
 
-    // <summary>
+    public abstract Either<Exception, V> ToEither();
+
+    /// <summary>
     /// Converts the instance to a <c>List</c>.
     /// </summary>
     public abstract IList<V> ToList();

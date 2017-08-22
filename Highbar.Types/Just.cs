@@ -151,6 +151,11 @@ namespace Highbar.Types
       return this;
     }
 
+    public override Either<Exception, V> ToEither()
+    {
+      return Either<Exception, V>.Right<Exception, V>(_value);
+    }
+
     public override IList<V> ToList()
     {
       return new List<V> { _value };
