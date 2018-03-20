@@ -13,5 +13,15 @@ namespace Highbar.Types
 
       return obj;
     }
+
+    public static T RequireNonNull<T>(T obj)
+    {
+      if(obj == null)
+      {
+        throw new ArgumentNullException(nameof(obj));
+      }
+
+      return obj;
+    }
   }
 }

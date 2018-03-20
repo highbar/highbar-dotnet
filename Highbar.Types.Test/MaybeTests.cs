@@ -63,7 +63,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldReturnForNonNull()
+        public void ShouldReturnForNonNull()
         {
           Maybe<bool> expectedResult = _testMaybe;
           Maybe<bool> actualResult = Maybe<bool>.From(_testValue);
@@ -72,7 +72,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldReturnNothingForEmptyList()
+        public void ShouldReturnNothingForEmptyList()
         {
           List<object> testList = new List<object>();
           Maybe<object> expectedResult = Maybe<object>.Nothing<object>();
@@ -82,7 +82,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldReturnJustOfFirstValueForPopulatedList()
+        public void ShouldReturnJustOfFirstValueForPopulatedList()
         {
           List<bool> testList = new List<bool> { _testValue, !_testValue };
           Maybe<bool> expectedResult = Maybe<bool>.Just(testList[0]);
@@ -92,7 +92,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldReturnMaybeForMaybe()
+        public void ShouldReturnMaybeForMaybe()
         {
           Maybe<bool> expectedResult = _testMaybe;
           Maybe<bool> actualResult = Maybe<bool>.From<bool>(_testMaybe);
@@ -104,7 +104,7 @@ namespace Highbar.Types.Tests
       public class FromJust
       {
         [Fact]
-        public void shouldReturnValueForJust()
+        public void ShouldReturnValueForJust()
         {
           bool expectedResult = _testValue;
           bool actualResult = Maybe<bool>.FromJust(_testMaybe);
@@ -113,7 +113,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldThrowForNothing()
+        public void ShouldThrowForNothing()
         {
           Exception exception = Record.Exception(() => Maybe<bool>.FromJust(Maybe<bool>.Nothing<bool>()));
           Assert.NotNull(exception);
@@ -124,10 +124,10 @@ namespace Highbar.Types.Tests
       public class MaybeMap
       {
         private readonly string _defaultValue = "default";
-        private Func<bool, string> _defaultMapper = b => b.ToString();
+        private readonly Func<bool, string> _defaultMapper = b => b.ToString();
 
         [Fact]
-        public void shouldApplyMapperForJust()
+        public void ShouldApplyMapperForJust()
         {
           string actualResult = Maybe<string>.MaybeMap(_defaultValue, _defaultMapper, _testMaybe);
           string expectedResult = _testValue.ToString();
@@ -136,7 +136,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldReturnDefaultValueForNull()
+        public void ShouldReturnDefaultValueForNull()
         {
           Maybe<bool> testMaybe = null;
           string expectedResult = _defaultValue;
@@ -146,7 +146,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldReturnDefaultValueForNothing()
+        public void ShouldReturnDefaultValueForNothing()
         {
           Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
           string expectedResult = _defaultValue;
@@ -159,10 +159,10 @@ namespace Highbar.Types.Tests
       public class MaybeMapCurried
       {
         private string _defaultValue = "default";
-        private Func<bool, string> _defaultMapper = b => b.ToString();
+        private readonly Func<bool, string> _defaultMapper = b => b.ToString();
 
         [Fact]
-        public void shouldApplyMapperForJust()
+        public void ShouldApplyMapperForJust()
         {
           string expectedResult = _testValue.ToString();
           string actualResult = Maybe<string>.MaybeMap(_defaultValue, _defaultMapper)(_testMaybe);
@@ -171,7 +171,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldReturnDefaultValueForNull()
+        public void ShouldReturnDefaultValueForNull()
         {
           Maybe<bool> testMaybe = null;
           string expectedResult = _defaultValue;
@@ -181,7 +181,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldReturnDefaultValueForNothing()
+        public void ShouldReturnDefaultValueForNothing()
         {
           Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
           string expectedResult = _defaultValue;
@@ -194,7 +194,7 @@ namespace Highbar.Types.Tests
       public class Of
       {
         [Fact]
-        public void shouldReturnJustForValue()
+        public void ShouldReturnJustForValue()
         {
           Maybe<bool> expectedResult = _testMaybe;
           Maybe<bool> actualResult = Maybe<bool>.Of(_testValue);
@@ -206,7 +206,7 @@ namespace Highbar.Types.Tests
       public class OfNullable
       {
         [Fact]
-        public void shouldReturnNothingForNull()
+        public void ShouldReturnNothingForNull()
         {
           Maybe<object> expectedResult = Maybe<object>.Nothing<object>();
           Maybe<object> actualResult = Maybe<object>.OfNullable<object>(null);
@@ -215,7 +215,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldReturnJustForValue()
+        public void ShouldReturnJustForValue()
         {
           Maybe<bool> expectedResult = _testMaybe;
           Maybe<bool> actualResult = Maybe<bool>.OfNullable(_testValue);
@@ -230,7 +230,7 @@ namespace Highbar.Types.Tests
       public class Alt
       {
         [Fact]
-        public void shouldReturnNothingForBothNothing()
+        public void ShouldReturnNothingForBothNothing()
         {
           Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
           Maybe<bool> testAlt = Maybe<bool>.Nothing<bool>();
@@ -241,7 +241,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldReturnInstanceForNothingAlt()
+        public void ShouldReturnInstanceForNothingAlt()
         {
           Maybe<bool> testAlt = Maybe<bool>.Nothing<bool>();
           Maybe<bool> expectedResult = _testMaybe;
@@ -251,7 +251,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldReturnAltForJustAlt()
+        public void ShouldReturnAltForJustAlt()
         {
           Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
           Maybe<bool> testAlt = Maybe<bool>.Just(_testValue);
@@ -262,7 +262,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldReturnInstanceForJustInstance()
+        public void ShouldReturnInstanceForJustInstance()
         {
           Maybe<bool> testAlt = Maybe<bool>.Just(!_testValue);
           Maybe<bool> expectedResult = _testMaybe;
@@ -274,7 +274,7 @@ namespace Highbar.Types.Tests
       public class Ap
       {
         [Fact]
-        public void shouldApplyForJustOfValueAndFunction()
+        public void ShouldApplyForJustOfValueAndFunction()
           {
             Maybe<Func<bool, bool>> testApply = Maybe<Func<bool, bool>>.Just<Func<bool, bool>>(b => !b);
             Maybe<bool> expectedResult = Maybe<bool>.Just(!_testValue);
@@ -284,7 +284,7 @@ namespace Highbar.Types.Tests
           }
 
         [Fact]
-        public void shouldNotApplyForNothingOfFunction()
+        public void ShouldNotApplyForNothingOfFunction()
           {
             Maybe<Func<bool, bool>> testApply = Maybe<Func<bool, bool>>.Nothing<Func<bool, bool>>();
             Maybe<bool> expectedResult = Maybe<bool>.Nothing<bool>();
@@ -294,7 +294,7 @@ namespace Highbar.Types.Tests
           }
 
         [Fact]
-        public void shouldNotApplyForNothingOfValue()
+        public void ShouldNotApplyForNothingOfValue()
           {
             Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
             Maybe<Func<bool, bool>> testApply = Maybe<bool>.Just<Func<bool, bool>>(b => !b);
@@ -308,7 +308,7 @@ namespace Highbar.Types.Tests
       public class Bind
       {
         [Fact]
-        public void shouldAliasChain()
+        public void ShouldAliasChain()
           {
             Func<bool, Maybe<bool>> testChain = value => Maybe<bool>.Just(!value);
             Maybe<bool> expectedResult = _testMaybe.Chain(testChain);
@@ -321,7 +321,7 @@ namespace Highbar.Types.Tests
       public class Chain
       {
         [Fact]
-        public void shouldChainForJust()
+        public void ShouldChainForJust()
           {
             Func<bool, Maybe<bool>> testChain = value => Maybe<bool>.Just(!value);
             Maybe<bool> expectedResult = Maybe<bool>.Just(!_testValue);
@@ -331,7 +331,7 @@ namespace Highbar.Types.Tests
           }
 
         [Fact]
-        public void shouldNotChainForNothing()
+        public void ShouldNotChainForNothing()
           {
             Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
             Func<bool, Maybe<bool>> testChain = value => Maybe<bool>.Just(!value);
@@ -344,11 +344,11 @@ namespace Highbar.Types.Tests
 
       public class CheckedMap
       {
-        private Func<bool, bool> _testMap = b => !b;
-        private Func<bool, bool> _testThrowMap = value => throw new Exception();
+        private readonly Func<bool, bool> _testMap = b => !b;
+        private readonly Func<bool, bool> _testThrowMap = value => throw new Exception();
 
         [Fact]
-        public void shouldMapForJust()
+        public void ShouldMapForJust()
           {
             Maybe<bool> testMaybe = Maybe<bool>.Just(_testValue);
             Maybe<bool> expectedResult = Maybe<bool>.Just(!_testValue);
@@ -358,7 +358,7 @@ namespace Highbar.Types.Tests
           }
 
         [Fact]
-        public void shouldNotMapForNothing()
+        public void ShouldNotMapForNothing()
           {
             Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
             Maybe<bool> expectedResult = Maybe<bool>.Nothing<bool>();
@@ -368,7 +368,7 @@ namespace Highbar.Types.Tests
           }
 
         [Fact]
-        public void shouldMapThrownToNothing()
+        public void ShouldMapThrownToNothing()
           {
             Maybe<bool> testMaybe = Maybe<bool>.Just(_testValue);
             Maybe<bool> expectedResult = Maybe<bool>.Nothing<bool>();
@@ -381,7 +381,7 @@ namespace Highbar.Types.Tests
       public class Coalesce
       {
         [Fact]
-        public void shouldAliasAlt()
+        public void ShouldAliasAlt()
           {
             Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
             Maybe<bool> expectedResult = testMaybe.Alt(_testMaybe);
@@ -394,7 +394,7 @@ namespace Highbar.Types.Tests
       public class Extend
       {
         [Fact]
-        public void shouldExtendForJust()
+        public void ShouldExtendForJust()
           {
             bool testDefaultValue = false;
             Func<Maybe<bool>, bool> testExtend = maybe => maybe
@@ -408,7 +408,7 @@ namespace Highbar.Types.Tests
           }
 
         [Fact]
-        public void shouldNotExtendForNothing()
+        public void ShouldNotExtendForNothing()
           {
             bool testDefaultValue = false;
             Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
@@ -426,7 +426,7 @@ namespace Highbar.Types.Tests
       public class Filter
       {
         [Fact]
-        public void shouldFilterJustToJust()
+        public void ShouldFilterJustToJust()
           {
             string testValue = "test";
             Maybe<string> testMaybe = Maybe<string>.Just(testValue);
@@ -439,7 +439,7 @@ namespace Highbar.Types.Tests
           }
 
         [Fact]
-        public void shouldFilterJustToNothing()
+        public void ShouldFilterJustToNothing()
           {
             string testValue = "test";
             Maybe<string> testMaybe = Maybe<string>.Just(testValue);
@@ -452,7 +452,7 @@ namespace Highbar.Types.Tests
           }
 
         [Fact]
-        public void shouldNotFilterNothingToJust()
+        public void ShouldNotFilterNothingToJust()
           {
             Maybe<string> testMaybe = Maybe<string>.Nothing<string>();
             //TODO(lee.crabtree): change to Predicates::AlwaysFalse when you write it.
@@ -467,7 +467,7 @@ namespace Highbar.Types.Tests
       public class FlatMap
       {
         [Fact]
-        public void shouldAliasChain()
+        public void ShouldAliasChain()
           {
             Func<bool, Maybe<bool>> testChain = value => Maybe<bool>.Just(!value);
             Maybe<bool> expectedResult = _testMaybe.Chain(testChain);
@@ -484,7 +484,7 @@ namespace Highbar.Types.Tests
         private static readonly Func<string, bool, string> _testLeftFold = (initialValue, underlyingValue) => _expectedResult;
 
         [Fact]
-        public void shouldReturnValueForJust()
+        public void ShouldReturnValueForJust()
           {
             string actualResult = _testMaybe.FoldLeft(_testLeftFold, _testInitialValue);
 
@@ -492,7 +492,7 @@ namespace Highbar.Types.Tests
           }
 
         [Fact]
-        public void shouldReturnValueForNothing()
+        public void ShouldReturnValueForNothing()
           {
             Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
             string actualResult = testMaybe.FoldLeft(_testLeftFold, _testInitialValue);
@@ -508,7 +508,7 @@ namespace Highbar.Types.Tests
         private static readonly Func<bool, string, string> _testRightFold = (underlyingValue, initialValue) => _expectedResult;
 
         [Fact]
-        public void shouldReturnValueForJust()
+        public void ShouldReturnValueForJust()
           {
             string actualResult = _testMaybe.FoldRight(_testRightFold, _testInitialValue);
 
@@ -516,7 +516,7 @@ namespace Highbar.Types.Tests
           }
 
         [Fact]
-        public void shouldReturnValueForNothing()
+        public void ShouldReturnValueForNothing()
           {
             Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
             string actualResult = testMaybe.FoldRight(_testRightFold, _testInitialValue);
@@ -528,7 +528,7 @@ namespace Highbar.Types.Tests
       public class GetOrElse
       {
         [Fact]
-        public void shouldReturnValueForJust()
+        public void ShouldReturnValueForJust()
         {
           bool testDefaultValue = !_testValue;
           bool expectedResult = _testValue;
@@ -538,7 +538,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldReturnOtherValueForNothing()
+        public void ShouldReturnOtherValueForNothing()
         {
           bool testDefaultValue = !_testValue;
           Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
@@ -552,7 +552,7 @@ namespace Highbar.Types.Tests
       public class GetOrElseGet
       {
         [Fact]
-        public void shouldReturnValueForJust()
+        public void ShouldReturnValueForJust()
         {
           //TODO(lee.crabtree): replace with Suppliers.Always(!testValue) when I write it.
           Func<bool> testSupplier = () => !_testValue;
@@ -563,7 +563,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldReturnOtherValueForNothing()
+        public void ShouldReturnOtherValueForNothing()
         {
           Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
           //TODO(lee.crabtree): replace with Suppliers.Always(!testValue) when I write it.
@@ -578,7 +578,7 @@ namespace Highbar.Types.Tests
       public class GetOrElseThrow
       {
         [Fact]
-        public void shouldReturnValueForJust()
+        public void ShouldReturnValueForJust()
         {
           Func<Exception> testSupplier = () => new Exception();
           bool expectedResult = _testValue;
@@ -588,7 +588,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldThrowForNothing()
+        public void ShouldThrowForNothing()
         {
           Func<Exception> testSupplier = () => new Exception();
           Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
@@ -602,7 +602,7 @@ namespace Highbar.Types.Tests
       public class HashCode
       {
         [Fact]
-        public void shouldReturn1ForNothing()
+        public void ShouldReturn1ForNothing()
         {
           Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
           int expectedResult = 1;
@@ -612,7 +612,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldReturnValueHashCodeForJust()
+        public void ShouldReturnValueHashCodeForJust()
         {
           int expectedResult = _testValue.GetHashCode();
           int actualResult = _testMaybe.GetHashCode();
@@ -624,7 +624,7 @@ namespace Highbar.Types.Tests
       public class IfJust
       {
         [Fact]
-        public void shouldCallIfJustForJust()
+        public void ShouldCallIfJustForJust()
         {
           Maybe<bool> testMaybe = Maybe<bool>.Just(_testValue);
           Mock<Action<bool>> testConsumer = new Mock<Action<bool>>();
@@ -636,7 +636,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldNotCallIfJustForNothing()
+        public void ShouldNotCallIfJustForNothing()
         {
           Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
           Mock<Action<bool>> testConsumer = new Mock<Action<bool>>();
@@ -651,7 +651,7 @@ namespace Highbar.Types.Tests
       public class IfNothing
       {
         [Fact]
-        public void shouldCallIfNothingForNothing()
+        public void ShouldCallIfNothingForNothing()
         {
           Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
           Mock<Action> testRunnable = new Mock<Action>();
@@ -663,7 +663,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldNotCallIfNothingForJust()
+        public void ShouldNotCallIfNothingForJust()
         {
           Maybe<bool> testMaybe = Maybe<bool>.Just(_testValue);
           Mock<Action> testRunnable = new Mock<Action>();
@@ -678,13 +678,13 @@ namespace Highbar.Types.Tests
       public class IsJust
       {
         [Fact]
-        public void shouldReturnTrueForJust()
+        public void ShouldReturnTrueForJust()
         {
           Assert.True(_testMaybe.IsJust());
         }
 
         [Fact]
-        public void shouldReturnFalseForNothing()
+        public void ShouldReturnFalseForNothing()
         {
           Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
 
@@ -695,13 +695,13 @@ namespace Highbar.Types.Tests
       public class IsNothing
       {
         [Fact]
-        public void shouldReturnFalseForJust()
+        public void ShouldReturnFalseForJust()
         {
           Assert.False(_testMaybe.IsNothing());
         }
 
         [Fact]
-        public void shouldReturnTrueForNothing()
+        public void ShouldReturnTrueForNothing()
         {
           Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
 
@@ -715,7 +715,7 @@ namespace Highbar.Types.Tests
         private readonly Func<bool, bool> _testMap = b => !b;
 
         [Fact]
-        public void shouldMapForJust()
+        public void ShouldMapForJust()
         {
           Maybe<bool> testMaybe = Maybe<bool>.Just(_testValue);
           Maybe<bool> expectedResult = Maybe<bool>.Just(!_testValue);
@@ -725,7 +725,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldNotMapForNothing()
+        public void ShouldNotMapForNothing()
         {
           Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
           Maybe<bool> expectedResult = Maybe<bool>.Nothing<bool>();
@@ -740,7 +740,7 @@ namespace Highbar.Types.Tests
         private readonly bool _testRecover = !_testValue;
 
         [Fact]
-        public void shouldReturnValueForJust()
+        public void ShouldReturnValueForJust()
         {
           Maybe<bool> expectedResult = _testMaybe;
           Maybe<bool> actualResult = _testMaybe.Recover(_testRecover);
@@ -749,7 +749,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldReturnValueForNothing()
+        public void ShouldReturnValueForNothing()
         {
           Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
           Maybe<bool> expectedResult = Maybe<bool>.Just(_testRecover);
@@ -761,18 +761,62 @@ namespace Highbar.Types.Tests
 
       public class Tap
       {
+        [Fact]
+        public void ShouldCallIfJustForJust()
+        {
+          Maybe<bool> testMaybe = Maybe<bool>.Just<bool>(true);
+          Mock<Action> testIfNothingRunnable = new Mock<Action>();
+          Mock<Action<bool>> testIfJustAction = new Mock<Action<bool>>();
+          int expectedIfNothingInvocations = 0;
+          int expectedIfJustInvocations = 1;
 
+          testMaybe.Tap(testIfNothingRunnable.Object, testIfJustAction.Object);
+
+          testIfNothingRunnable.Verify(f => f(), Times.Exactly(expectedIfNothingInvocations));
+          testIfJustAction.Verify(f => f(It.IsAny<bool>()), Times.Exactly(expectedIfJustInvocations));
+        }
+
+        [Fact]
+        public void ShouldCallIfNothingForNothing()
+        {
+          Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
+          Mock<Action> testIfNothingRunnable = new Mock<Action>();
+          Mock<Action<bool>> testIfJustAction = new Mock<Action<bool>>();
+          int expectedIfNothingInvocations = 1;
+          int expectedIfJustInvocations = 0;
+
+          testMaybe.Tap(testIfNothingRunnable.Object, testIfJustAction.Object);
+
+          testIfNothingRunnable.Verify(f => f(), Times.Exactly(expectedIfNothingInvocations));
+          testIfJustAction.Verify(f => f(It.IsAny<bool>()), Times.Exactly(expectedIfJustInvocations));
+        }
       }
 
       public class ToEither
       {
+        [Fact]
+        public void ShouldReturnRightForJust()
+        {
+          Either<Exception, bool> expectedResult = Either<Exception, bool>.Right<Exception, bool>(_testValue);
+          Either<Exception, bool> actualResult = _testMaybe.ToEither();
 
+          Assert.Equal(expectedResult, actualResult);
+        }
+
+        [Fact]
+        public void ShouldReturnLeftForNothing()
+        {
+          Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
+          Either<Exception, bool> actualResult = testMaybe.ToEither();
+
+          Assert.True(actualResult.IsLeft);
+        }
       }
 
       public class ToList
       {
         [Fact]
-        public void shouldReturnListForJust()
+        public void ShouldReturnListForJust()
         {
           IList<bool> expectedResult = new List<bool> { _testValue };
           IList<bool> actualResult = _testMaybe.ToList();
@@ -781,7 +825,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldReturnEmptyListForNothing()
+        public void ShouldReturnEmptyListForNothing()
         {
           Maybe<bool> testMaybe = Maybe<bool>.Nothing<bool>();
           IList<bool> expectedResult = new List<bool>();
@@ -799,7 +843,7 @@ namespace Highbar.Types.Tests
       public class String
       {
         [Fact]
-        public void shouldReturnMaybeValueForJust()
+        public void ShouldReturnMaybeValueForJust()
         {
           string expectedResult = "Just{" + _testValue + "}";
           string actualResult = _testMaybe.ToString();
@@ -808,7 +852,7 @@ namespace Highbar.Types.Tests
         }
 
         [Fact]
-        public void shouldReturnNothingForNothing()
+        public void ShouldReturnNothingForNothing()
         {
           Maybe<object> testMaybe = Maybe<object>.Nothing<object>();
           string expectedResult = "Nothing";
