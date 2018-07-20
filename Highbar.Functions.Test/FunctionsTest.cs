@@ -8,6 +8,7 @@ namespace Highbar.Functions.Test
 {
   public class FunctionsTests
   {
+    private static readonly string _testString = "string";
     private static readonly bool _testInputA = true;
     private static readonly Func<bool, int> _testAtoB = value => value ? 1 : 0;
     private static readonly Func<int, string> _testBtoC = value => value == 1 ? "one" : "zero";
@@ -23,6 +24,27 @@ namespace Highbar.Functions.Test
       {
         bool expectedValue = _testInputA;
         bool actualValue = Always<int, bool>(_testInputA)(1);
+
+        Assert.Equal(expectedValue, actualValue);
+      }
+
+      [Fact]
+      public void ShouldReturnTheAlwaysValue()
+      {
+        string expectedValue = _testString;
+        string actualValue = Always(_testString)(new object());
+
+        Assert.Equal(expectedValue, actualValue);
+      }
+    }
+
+    public class AlwaysSupply
+    {
+      [Fact]
+      public void ShouldReturnTheAlwaysValue()
+      {
+        string expectedValue = _testString;
+        string actualValue = AlwaysSupply(_testString)();
 
         Assert.Equal(expectedValue, actualValue);
       }

@@ -161,6 +161,11 @@ namespace Highbar.Types
       return new List<V> { _value };
     }
 
+    public override Validation<Exception, V> ToValidation()
+    {
+      return Validation<Exception, V>.Pass<Exception, V>(_value);
+    }
+
     public override int GetHashCode()
     {
       return _value.GetHashCode();

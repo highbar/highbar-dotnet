@@ -288,5 +288,7 @@ namespace Highbar.Types
     /// Converts the instance to a <c>List</c>.
     /// </summary>
     public abstract IList<V> ToList();
+
+    public abstract Validation<Exception, V> ToValidation();
   }
 }

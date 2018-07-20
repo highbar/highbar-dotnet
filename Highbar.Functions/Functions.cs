@@ -9,6 +9,21 @@ namespace Highbar.Functions
       return ignoredA => alwaysValue;
     }
 
+    public static Func<object, A> Always<A>(A alwaysValue)
+    {
+      return ignoredObject => alwaysValue;
+    }
+
+    public static Func<A> AlwaysSupply<A>(A alwaysValue)
+    {
+      return () => alwaysValue;
+    }
+
+    public static Func<A, A> Identity<A>()
+    {
+      return a => a;
+    }
+
     public static Func<A, C> Pipe<A, B, C>(Func<A, B> first, Func<B, C> second)
     {
       return value => second(first(value));
